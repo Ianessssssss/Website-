@@ -26,11 +26,10 @@
   }
 
   .button-container {
+    position: relative;
     display: flex;
     justify-content: center;
     gap: 40px;
-    position: relative;
-    margin-top: 10px;
   }
 
   .btn {
@@ -52,7 +51,7 @@
     background-color: #ff4d4d;
     color: white;
     position: absolute;
-    z-index: 9; /* stays below yes only visually, not hidden */
+    z-index: 9;
   }
 
   #message {
@@ -113,8 +112,8 @@
     const gif = document.getElementById('gif');
     const question = document.getElementById('question');
     let yesSize = 1;
-    let emojiInterval;
     let noClickCount = 0;
+    let emojiInterval;
 
     const loveEmojis = ["💖","💞","💋","😘","😍","💘","💝","💗","🌹","💓","🥰","💌"];
 
@@ -132,22 +131,25 @@
     noBtn.addEventListener('click', () => {
       noClickCount++;
 
-      // Move only after 20th click
-      if (noClickCount >= 20) {
+      if (noClickCount < 20) {
+        // Move "No" to random location
         const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 50);
         noBtn.style.left = `${x}px`;
         noBtn.style.top = `${y}px`;
-        noBtn.style.position = "absolute";
+      } else {
+        // Hide "No" after 20th click
+        noBtn.style.display = "none";
       }
 
-      // Grow "Yes" button gradually
-      yesSize += 0.15;
+      // Grow "Yes" button each time
+      yesSize += 0.25;
       yesBtn.style.transform = `scale(${yesSize})`;
 
-      // Add floating emojis each click
+      // Add floating love emojis
       createEmoji();
 
+      // When "Yes" becomes huge
       if (yesSize >= 8) {
         yesBtn.style.position = "fixed";
         yesBtn.style.top = "0";
